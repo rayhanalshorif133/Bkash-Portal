@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ServiceProviderController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,5 +27,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
+Route::group(['prefix' => 'service', 'middleware' => ['auth'], 'as' => 'service.'], function () {
+    Route::get('/provider', [ServiceProviderController::class, 'index'])->name('provider');
+});
 
