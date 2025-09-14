@@ -29,5 +29,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['prefix' => 'service', 'middleware' => ['auth'], 'as' => 'service.'], function () {
     Route::get('/provider', [ServiceProviderController::class, 'index'])->name('provider');
+    Route::put('/provider-update/{type}', [ServiceProviderController::class, 'update'])->name('update');
 });
 

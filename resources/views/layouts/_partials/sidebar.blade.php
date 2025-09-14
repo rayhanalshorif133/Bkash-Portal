@@ -15,7 +15,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('service.provider') }}" class="nav-link">
+                <a href="{{ route('service.provider') }}" class="nav-link {{ $currentRoute == 'service.provider' ? 'active' : '' }}">
                     <i class="nav-icon fa-solid fa-gears"></i>
                     <p>
                         Service Provider

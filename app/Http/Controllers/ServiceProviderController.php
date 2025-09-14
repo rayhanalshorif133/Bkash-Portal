@@ -7,12 +7,18 @@ use Illuminate\Http\Request;
 class ServiceProviderController extends Controller
 {
 
-     public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function index(){
+    public function index()
+    {
         return view('service-provider');
+    }
+
+    public function update(Request $request, $type = "production")
+    {
+        dd($type, $request->all());
     }
 }
