@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// https://gpglobal.b2mwap.com/api/subscription?keyword=GSD&msisdn=8801701677479&success_url=https://www.google.com/&failed_url=https://www.google.com/
+
+Route::get('/subscription', [PaymentController::class, 'subscription']);

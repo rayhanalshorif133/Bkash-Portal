@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceProvider extends Model
 {
     use HasFactory;
+
+    protected $table = 'service_provider_sandboxes';
+
+    protected $fillable = [
+        'base_url',
+        'app_key',
+        'app_secret',
+        'type',
+        'username',
+        'password',
+    ];
 }
