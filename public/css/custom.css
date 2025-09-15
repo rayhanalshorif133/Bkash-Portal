@@ -62,7 +62,19 @@ input[type='number']::-webkit-outer-spin-button {
 
 .card-navy {
     --lte-card-variant-bg: #18206F;
-    --lte-card-variant-bg-rgb:#18206F;
+    --lte-card-variant-bg-rgb: #18206F;
     --lte-card-variant-color: #18206F;
     --lte-card-variant-color-rgb: 0, 0, 0;
+}
+
+.text-semibold {
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+   margin-bottom: 10px;
 }

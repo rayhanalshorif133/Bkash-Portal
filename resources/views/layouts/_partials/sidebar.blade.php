@@ -15,6 +15,14 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{{ route('service.index') }}" class="nav-link {{ $currentRoute == 'service.index' ? 'active' : '' }}">
+                    <i class="nav-icon fa-solid fa-screwdriver-wrench"></i>
+                    <p>
+                        Services
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ route('service.provider') }}" class="nav-link {{ $currentRoute == 'service.provider' ? 'active' : '' }}">
                     <i class="nav-icon fa-solid fa-gears"></i>
                     <p>

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ServiceProviderController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    if(Auth::check()){
+    if (Auth::check()) {
         return redirect('/home');
     } else {
         return redirect('login');
@@ -25,10 +27,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::group(['prefix' => 'service', 'middleware' => ['auth'], 'as' => 'service.'], function () {
-    Route::get('/provider', [ServiceProviderController::class, 'index'])->name('provider');
-    Route::put('/provider-update/{type}', [ServiceProviderController::class, 'update'])->name('update');
-});
-
+Route::middleware(['auth'])
+    ->prefix('service')
+    ->name('service.')
+    ->group(function () {
+        Route::resource('/', ServiceController::class);
+        Route::controller(ServiceProviderController::class)->group(function () {
+            Route::get('/provider', 'index')->name('provider');
+            Route::put('/provider-update/{type}', 'update')->name('update');
+        });
+    });

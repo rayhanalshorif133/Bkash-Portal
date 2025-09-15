@@ -37,30 +37,31 @@
                         <b>Sandbox Config</b>
                     </div>
                     <div class="card-body">
-                        <form class="form" action="{{ route('service.update', 'sandbox') }}">
+                        <form class="form" action="{{ route('service.update', 'sandbox') }}" method="POST">
                             @csrf
+                            @method('PUT')
                             <div class="form-group">
-                                <label for="base_url" class="required">Base URL</label>
-                                <input type="text" id="base_url" name="base_url" class="form-control" required>
+                                <label for="base_url" class="required text-semibold">Base URL</label>
+                                <input type="text" id="base_url" value="{{ $serviceProviderSandbox->base_url }}" name="base_url" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="app_key" class="required">App Key</label>
-                                <input type="text" id="app_key" name="app_key" class="form-control" required>
+                                <label for="app_key" class="required text-semibold">App Key</label>
+                                <input type="text" id="app_key" name="app_key" value="{{ $serviceProviderSandbox->app_key }}" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="app_secret" class="required">App Secret</label>
-                                <input type="text" id="app_secret" name="app_secret" class="form-control" required>
+                                <label for="app_secret" class="required text-semibold">App Secret</label>
+                                <input type="text" id="app_secret" name="app_secret" value="{{ $serviceProviderSandbox->app_secret }}"  class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="username" class="required">User Name</label>
-                                <input type="text" id="username" name="username" class="form-control" required>
+                                <label for="username" class="required text-semibold">User Name</label>
+                                <input type="text" id="username" name="username" value="{{ $serviceProviderSandbox->username }}"  class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="password" class="required">User Password</label>
-                                <input type="password" id="password" name="password" class="form-control" required>
+                                <label for="password" class="required text-semibold">User Password</label>
+                                <input type="password" id="password" value="{{ $serviceProviderSandbox->password }}"  name="password" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <input type="submit" class="btn btn-primary" value="Save Settings">
+                                <input type="submit" class="btn btn-primary" value="Save">
                             </div>
                         </form>
                     </div>

@@ -13,6 +13,7 @@ class Service extends Model
         'name',
         'keyword',
         'type',
+        'mode',
         'validity',
         'amount',
         'api_url',
