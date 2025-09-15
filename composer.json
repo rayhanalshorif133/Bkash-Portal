@@ -13,7 +13,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "*",
         "php-flasher/flasher-laravel": "^1.15",
-        "spatie/laravel-permission": "^6.21"
+        "spatie/laravel-permission": "^6.21",
+        "yajra/laravel-datatables-oracle": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

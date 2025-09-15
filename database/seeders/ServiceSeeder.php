@@ -24,18 +24,26 @@ class ServiceSeeder extends Seeder
         $serviceProviderSandbox->password   = 'hWD@8vtzw0';
         $serviceProviderSandbox->save();
 
-        for ($i=0; $i < 50 ; $i++) {
-            Service::create([
-            'name'         => 'Dummy Service',
-            'keyword'      => 'NEW' . $i,
-            'type'         => 'subscription',
-            'mode'         => 'production',
-            'validity'     => '7 days',
-            'amount'       => 49.50,
-            'api_url'      => 'https://dummy.com/api',
-            'redirect_url' => 'https://dummy.com/redirect',
-            'description'  => 'Just a test service entry',
+        Service::create([
+            'name'         => 'Pac Rush',
+            'keyword'      => 'APP-S',
+            'mode'         => 'sandbox',
+            'validity'     => '1 days',
+            'amount'       => 10,
+            'api_url'      => '#',
+            'redirect_url' => '#',
+            'description'  => '#',
         ]);
-        }
+
+        Service::create([
+            'name'         => 'Pac Rush',
+            'keyword'      => 'APP-P',
+            'mode'         => 'production',
+            'validity'     => '1 days',
+            'amount'       => 10,
+            'api_url'      => '#',
+            'redirect_url' => '#',
+            'description'  => '#',
+        ]);
     }
 }
