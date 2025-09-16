@@ -12,6 +12,7 @@ class PaymentController extends Controller
     public function subscription(Request $request)
     {
 
+
         try {
             $keyword = $request->keyword;
             if (!$keyword) {
@@ -21,27 +22,28 @@ class PaymentController extends Controller
                 ], 400);
             }
             $service = Service::select()->where('keyword', $keyword)->first();
-            if ($service->mode == 'sandbox') {
-                $serviceProvider = ServiceProvider::first();
-                $this->getToken($service->id);
-            } else {
-                dd('production');
-            }
+            return $this->getToken($service->mode);
         } catch (\Throwable $th) {
             //throw $th;
+            dd($th->getMessage());
         }
     }
 
 
-    public function getToken($bkashApiBase, $appKey, $appSecret)
+    public function getToken($mode)
     {
-        // https://checkout.sandbox.bka.sh/v1.2.0-beta/
-        // https://checkout.pay.bka.sh/v1.2.0-beta/checkout/token/
 
-        $bkashApiBase = 'https://checkout.pay.bka.sh/v1.2.0-beta/checkout/token/';
+        $serviceProvider = ServiceProvider::select()->where('mode', $mode)->first();
 
-        $appKey = '2l6u3m4i01ed69foin29vp42m';
-        $appSecret = '1d2qur3hm323h26h6a0m5pqucka8qkaae5drfimo4vejabo032qi';
+
+
+        $bkashApiBase = $serviceProvider->base_url;
+
+        $appKey = $serviceProvider->app_key;
+        $appSecret = $serviceProvider->app_secret;
+
+        // :TODO:
+        dd($serviceProvider);
 
         $grantToken = DB::connection('mysql2')
             ->table('grant_token')

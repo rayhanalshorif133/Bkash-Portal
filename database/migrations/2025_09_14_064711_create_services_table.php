@@ -18,7 +18,7 @@ class CreateServicesTable extends Migration
             $table->string('name');
             $table->string('keyword')->unique();
             $table->enum('type', ['subscription', 'on-demand'])->default('on-demand');
-            $table->enum('mode', ['production', 'sandbox'])->default('production');
+            $table->enum('mode', ['app','web', 'sandbox'])->default('app');
             $table->string('validity')->nullable();
             $table->decimal('amount', 10, 2)->nullable();
             $table->string('api_url')->nullable();

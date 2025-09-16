@@ -19,6 +19,7 @@ class CreateGrantTokensTable extends Migration
             $table->text('id_token');
             $table->integer('expires_in')->default(3600);
             $table->text('refresh_token');
+            $table->enum('mode', ['app','web', 'sandbox'])->default('app');
             $table->timestamp('expire_time');
             $table->string('status')->nullable();
             $table->string('msg')->nullable();

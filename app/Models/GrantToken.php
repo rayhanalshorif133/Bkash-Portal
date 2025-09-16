@@ -19,6 +19,7 @@ class GrantToken extends Model
         'refresh_token',
         'expire_time',
         'status',
+        'mode',
         'msg',
         'created',
     ];

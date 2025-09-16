@@ -15,7 +15,7 @@ class ServiceProvider extends Model
         'base_url',
         'app_key',
         'app_secret',
-        'type',
+        'mode',
         'username',
         'password',
     ];

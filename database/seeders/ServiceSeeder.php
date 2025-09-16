@@ -21,7 +21,7 @@ class ServiceSeeder extends Seeder
         $serviceProviderSandbox->app_secret = '1vggbqd4hqk9g96o9rrrp2jftvek578v7d2bnerim12a87dbrrka';
         $serviceProviderSandbox->username   = 'sandboxTestUser';
         $serviceProviderSandbox->password   = 'hWD@8vtzw0';
-        $serviceProviderSandbox->type   = 'sandbox';
+        $serviceProviderSandbox->mode   = 'sandbox';
         $serviceProviderSandbox->save();
 
 
@@ -31,7 +31,7 @@ class ServiceSeeder extends Seeder
         $serviceProviderSandbox->app_secret = '1d2qur3hm323h26h6a0m5pqucka8qkaae5drfimo4vejabo032qi';
         $serviceProviderSandbox->username   = 'BDGAMERS';
         $serviceProviderSandbox->password   = 'B@1PtexcaQMvb';
-        $serviceProviderSandbox->type   = 'old-production';
+        $serviceProviderSandbox->mode   = 'web';
         $serviceProviderSandbox->save();
 
         $serviceProviderSandbox = new ServiceProvider();
@@ -40,7 +40,7 @@ class ServiceSeeder extends Seeder
         $serviceProviderSandbox->app_secret = '1d2qur3hm323h26h6a0m5pqucka8qkaae5drfimo4vejabo032qi';
         $serviceProviderSandbox->username   = 'BDGAMERS';
         $serviceProviderSandbox->password   = 'B@1PtexcaQMvb';
-        $serviceProviderSandbox->type   = 'web';
+        $serviceProviderSandbox->mode   = 'web';
         $serviceProviderSandbox->save();
 
         $serviceProviderSandbox = new ServiceProvider();
@@ -49,7 +49,7 @@ class ServiceSeeder extends Seeder
         $serviceProviderSandbox->app_secret = '1d2qur3hm323h26h6a0m5pqucka8qkaae5drfimo4vejabo032qi';
         $serviceProviderSandbox->username   = 'BDGAMERS';
         $serviceProviderSandbox->password   = 'B@1PtexcaQMvb';
-        $serviceProviderSandbox->type   = 'app';
+        $serviceProviderSandbox->mode   = 'app';
         $serviceProviderSandbox->save();
 
 
@@ -69,7 +69,7 @@ class ServiceSeeder extends Seeder
         Service::create([
             'name'         => 'Pac Rush',
             'keyword'      => 'APP-P',
-            'mode'         => 'production',
+            'mode'         => 'app',
             'validity'     => '1 days',
             'amount'       => 10,
             'api_url'      => '#',
