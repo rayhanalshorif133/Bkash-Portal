@@ -105,16 +105,18 @@ class PaymentController extends Controller
                 $response = $this->callBkashApi($bkashApiBase . 'grant', $requestData, $serviceProvider);
             }
 
-            DB::connection('mysql2')->table('grant_token')->insert([
-                'msisdn' => null,
-                'id_token' => $response['id_token'],
-                'expires_in' => 3600,
-                'refresh_token' => $response['refresh_token'],
-                'expire_time' => Carbon::now()->addHour()->format('Y-m-d H:i:s'),
-                'status' => null,
-                'msg' => null,
-                'created' => Carbon::now()->format('Y-m-d H:i:s'),
-            ]);
+
+            $grantToken = new GrantToken();
+            $grantToken->msisdn        = null;
+            $grantToken->id_token      = $response['id_token'];
+            $grantToken->expires_in    = 3600;
+            $grantToken->refresh_token = $response['refresh_token'];
+            $grantToken->expire_time   = Carbon::now()->addHour()->format('Y-m-d H:i:s');
+            $grantToken->status        = null;
+            $grantToken->msg           = null;
+            $grantToken->mode           = $mode;
+            $grantToken->created       = Carbon::now()->format('Y-m-d H:i:s');
+            $grantToken->save();
 
 
             return $response['id_token'];
