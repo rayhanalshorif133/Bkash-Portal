@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Models\ServiceProvider;
+use App\Models\GrantToken;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -37,17 +39,17 @@ class PaymentController extends Controller
 
 
 
-        $bkashApiBase = $serviceProvider->base_url;
+        // https://checkout.pay.bka.sh/v1.2.0-beta/checkout/token/
+        // https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/
+        $bkashApiBase = $serviceProvider->base_url . 'token/';
 
         $appKey = $serviceProvider->app_key;
         $appSecret = $serviceProvider->app_secret;
 
-        // :TODO:
-        dd($serviceProvider);
 
-        $grantToken = DB::connection('mysql2')
-            ->table('grant_token')
-            ->orderBy('id', 'desc')
+
+        $grantToken = GrantToken::orderBy('id', 'desc')
+            ->where('mode', $mode)
             ->first();
 
         // IF the table is empty, create a new grant token
@@ -58,18 +60,19 @@ class PaymentController extends Controller
                 'app_secret' => $appSecret,
             ];
 
-            $response = $this->callBkashApi($bkashApiBase . 'grant', $requestData);
+            $response = $this->callBkashApi($bkashApiBase . 'grant', $requestData, $serviceProvider);
 
-            DB::connection('mysql2')->table('grant_token')->insert([
-                'msisdn' => null,
-                'id_token' => $response['id_token'],
-                'expires_in' => 3600,
-                'refresh_token' => $response['refresh_token'],
-                'expire_time' => Carbon::now()->addHour()->format('Y-m-d H:i:s'),
-                'status' => null,
-                'msg' => null,
-                'created' => Carbon::now()->format('Y-m-d H:i:s'),
-            ]);
+            $grantToken = new GrantToken();
+            $grantToken->msisdn        = null;
+            $grantToken->id_token      = $response['id_token'];
+            $grantToken->expires_in    = 3600;
+            $grantToken->refresh_token = $response['refresh_token'];
+            $grantToken->expire_time   = Carbon::now()->addHour()->format('Y-m-d H:i:s');
+            $grantToken->status        = null;
+            $grantToken->msg           = null;
+            $grantToken->mode           = $mode;
+            $grantToken->created       = Carbon::now()->format('Y-m-d H:i:s');
+            $grantToken->save();
 
 
             return $response['id_token'];
@@ -89,7 +92,7 @@ class PaymentController extends Controller
             ];
 
 
-            $response = $this->callBkashApi($bkashApiBase . 'refresh', $requestData);
+            $response = $this->callBkashApi($bkashApiBase . 'refresh', $requestData, $serviceProvider);
 
 
             // Check after the refresh token is expired, if it is expired, then create a new grant token
@@ -99,7 +102,7 @@ class PaymentController extends Controller
                     'app_secret' => $appSecret,
                 ];
 
-                $response = $this->callBkashApi($bkashApiBase . 'grant', $requestData);
+                $response = $this->callBkashApi($bkashApiBase . 'grant', $requestData, $serviceProvider);
             }
 
             DB::connection('mysql2')->table('grant_token')->insert([
@@ -119,13 +122,13 @@ class PaymentController extends Controller
     }
 
 
-    public function callBkashApi($url, $requestData)
+    public function callBkashApi($url, $requestData, $serviceProvider)
     {
 
         $headers = array(
             'Content-Type:application/json',
-            'username:BDGAMERS',
-            'password:B@1PtexcaQMvb'
+            'username:' . $serviceProvider->username,
+            'password:' . $serviceProvider->password
         );
 
         $ch = curl_init($url);
@@ -144,7 +147,7 @@ class PaymentController extends Controller
 
 
         if ($error) {
-            throw new Exception("cURL Error: " . $error);
+            throw new \Exception("cURL Error: " . $error);
         }
 
 
