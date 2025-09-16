@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ServiceProviderSandbox;
+use App\Models\ServiceProvider;
 use Illuminate\Http\Request;
 use Flasher\Laravel\Facade\Flasher;
+use Yajra\DataTables\Facades\DataTables;
 
 class ServiceProviderController extends Controller
 {
@@ -14,29 +15,40 @@ class ServiceProviderController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-
-        $serviceProviderSandbox = ServiceProviderSandbox::first();
-
-        return view('service-provider', compact('serviceProviderSandbox'));
+        if (request()->ajax()) {
+            $query = ServiceProvider::orderBy('created_at', 'desc');
+            return DataTables::of($query)->make(true);
+        }
+        return view('service-provider');
     }
 
-    public function update(Request $request, $type = "production")
+
+    public function fetch($id)
+    {
+        $serviceProvider = ServiceProvider::select()->where('id', $id)->first();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Service Provider updated successfully',
+            'data'    => $serviceProvider
+        ]);
+    }
+
+
+
+    public function update(Request $request, $id)
     {
         try {
-            if ($type == "sandbox") {
-                $serviceProviderSandbox = ServiceProviderSandbox::first();
-                $serviceProviderSandbox->base_url   = $request->base_url;
-                $serviceProviderSandbox->app_key   = $request->app_key;
-                $serviceProviderSandbox->app_secret   = $request->app_secret;
-                $serviceProviderSandbox->username   = $request->username;
-                $serviceProviderSandbox->username   = $request->username;
-                $serviceProviderSandbox->password   = $request->password;
-                $serviceProviderSandbox->save();
-            } else {
-                dd($type);
-            }
+            $serviceProvider = ServiceProvider::select()->where('id', $id)->first();
+            $serviceProvider->base_url   = $request->base_url;
+            $serviceProvider->app_key   = $request->app_key;
+            $serviceProvider->app_secret   = $request->app_secret;
+            $serviceProvider->username   = $request->username;
+            $serviceProvider->type   = $request->type;
+            $serviceProvider->password   = $request->password;
+            $serviceProvider->save();
             flash('<strong>Updated!</strong> Sandbox credentials saved successfully.');
         } catch (\Throwable $th) {
             flash()->addError($th->getMessage());

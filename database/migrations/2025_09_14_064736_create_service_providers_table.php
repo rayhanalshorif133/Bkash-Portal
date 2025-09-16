@@ -23,11 +23,11 @@ class CreateServiceProvidersTable extends Migration
 
         Schema::create('service_providers', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->string('app_key');
-            $table->string('app_secret');
             $table->string('username');
             $table->string('password');
+            $table->string('app_key');
+            $table->string('app_secret');
+            $table->string('type');
             $table->string('base_url');
             $table->timestamps();
         });

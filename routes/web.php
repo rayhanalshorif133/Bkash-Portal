@@ -36,6 +36,7 @@ Route::middleware(['auth'])
         Route::resource('/', ServiceController::class);
         Route::controller(ServiceProviderController::class)->group(function () {
             Route::get('/provider', 'index')->name('provider');
-            Route::put('/provider-update/{type}', 'update')->name('update');
+            Route::get('/provider/{id}/fetch', 'fetch')->name('provider.fetch');
+            Route::put('/provider-update/{id}', 'update')->name('provider.update');
         });
     });

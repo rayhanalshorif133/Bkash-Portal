@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
-use App\Models\ServiceProviderSandbox;
 use App\Models\ServiceProvider;
 use Illuminate\Http\Request;
 
@@ -23,7 +22,7 @@ class PaymentController extends Controller
             }
             $service = Service::select()->where('keyword', $keyword)->first();
             if ($service->mode == 'sandbox') {
-                $serviceProviderSandbox = ServiceProviderSandbox::first();
+                $serviceProvider = ServiceProvider::first();
                 $this->getToken($service->id);
             } else {
                 dd('production');

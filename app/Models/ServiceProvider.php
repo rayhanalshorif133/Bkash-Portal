@@ -9,7 +9,7 @@ class ServiceProvider extends Model
 {
     use HasFactory;
 
-    protected $table = 'service_provider_sandboxes';
+    protected $table = 'service_providers';
 
     protected $fillable = [
         'base_url',
