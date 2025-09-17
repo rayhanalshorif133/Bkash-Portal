@@ -35,31 +35,6 @@ class PaymentController extends Controller
         }
     }
 
-    public function createBkashPayment()
-    {
-        $url = "https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/payment/create";
-
-        $response = Http::withHeaders([
-            'Authorization' => 'YOUR_ACCESS_TOKEN', // 👈 Replace with the token you got from grant/refresh
-            'X-APP-Key'     => '5tunt4masn6pv2hnvte1sb5n3j',
-            'accept'        => 'application/json',
-            'content-type'  => 'application/json',
-        ])->post($url, [
-            'amount'               => '10',
-            'currency'             => 'BDT',
-            'intent'               => 'sale',
-            'merchantInvoiceNumber' => '819983', // 👈 unique each time
-        ]);
-
-        if ($response->successful()) {
-            return $response->json(); // ✅ paymentID + status
-        }
-
-        return response()->json([
-            'error'   => $response->status(),
-            'message' => $response->body(),
-        ], $response->status());
-    }
 
     public function createPayment($token, $msisdn, $mode)
     {
@@ -68,48 +43,40 @@ class PaymentController extends Controller
         $serviceProvider = ServiceProvider::select()->where('mode', $mode)->first();
         $url = $serviceProvider->base_url . '/payment/create';
 
-        dd($url);
-
-        $request_data = array(
-            'amount'                =>  '10',
-            'currency'                => 'BDT',
-            'intent'                => 'sale',
-            'merchantInvoiceNumber'    =>  '01920298',
-        );
+        $requestData = [
+            'amount' => '10',
+            'currency' => 'BDT',
+            'intent' => 'sale',
+            'merchantInvoiceNumber' => '023',
+        ];
 
 
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => $token,
+            'x-app-key' => $serviceProvider->app_key,
+        ])->timeout(30)->post($url, $requestData);
 
-        $url = curl_init('https://checkout.pay.bka.sh/v1.2.0-beta/checkout/payment/create');
-        $request_data_json = json_encode($request_data);
-        $header = array(
-            'Content-Type:application/json',
-            "authorization: $token",
-            'x-app-key:2l6u3m4i01ed69foin29vp42m'
-        );
+        $result = $response->json(); // decode JSON response as array
 
-        curl_setopt($url, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($url, CURLOPT_POSTFIELDS, $request_data_json);
-        curl_setopt($url, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($url, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        curl_setopt($url, CURLOPT_TIMEOUT, 30);
-        $response = curl_exec($url);
+        // create payment data store
+        /* 
+        {
+  "amount": "10",
+  "createTime": "2025-09-17T15:04:34:736 GMT+0600",
+  "currency": "BDT",
+  "hash": "aMSkYvrPg(lTH8DKLtMwQI0HJ)56eXgmtPBZbdy4y-KG7yO!XL8rI0Hf2yc0-40mG)lYZSqJ*d-73zFBv*CIRt9kHy!FRX1LjZPH1758099874727",
+  "intent": "sale",
+  "merchantInvoiceNumber": "023",
+  "orgLogo": "https://s3-ap-southeast-1.amazonaws.com/merchantlogo.sandbox.bka.sh/merchant-default-logo.png",
+  "orgName": "TestCheckoutMerchant2",
+  "paymentID": "CH0011MThcn6P1758099874727",
+  "transactionStatus": "Initiated"
+}
 
-        curl_close($url);
+        */
 
-
-
-        $response = json_decode($response, true);
-
-
-
-        $payCreate->payment_id = $response['paymentID'];
-        $payCreate->amount = $response['amount'];
-        $payCreate->response = $response;
-        $payCreate->save();
-
-        return $response;
+        return $result;
     }
 
     public function getInvoiceNo()

@@ -26,29 +26,57 @@
 
 @section('content')
     <div class="container-fluid">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum ea provident tenetur laudantium esse doloribus iure,
-        temporibus dolores reiciendis tempora rem, obcaecati ex est placeat dolore beatae porro nemo blanditiis.
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Make a Payment</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="paymentType" class="form-label">Select Payment Type</label>
+                                    <select class="form-select" id="paymentType" required>
+                                        <option value="">Choose...</option>
+                                        <option value="credit">Credit Card</option>
+                                        <option value="paypal">PayPal</option>
+                                        <option value="bKash">bKash</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Amount</label>
+                                    <input type="number" class="form-control" id="amount" placeholder="Enter amount"
+                                        required min="1">
+                                </div>
+
+                                <button type="button" class="btn btn-primary w-100" id="bKash_button">Pay</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
 
 @push('script')
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.12.2/dist/axios.min.js"></script>
     <script>
+        var countClick = 0;
         $(document).on('click', "#bKash_button", function() {
+            console.log('button');
             countClick++;
 
             if (countClick == 1) {
                 $(this).click();
             }
 
-            window.sessionStorage.setItem('button-text', $(this).text());
 
-            setTimeout(function() {
-                $("#bKash_button").text('Lodding...');
-            }, 200);
-
-            const msisdn = $("#auth_phone_number").val();
-            const keyword = $("#keyword").val();
+            const msisdn = '01923988380';
+            const keyword = 'APP-S';
             var paymentID = '';
 
 
@@ -64,54 +92,50 @@
                         amount: '01',
                         intent: 'sale'
                     },
-                    createRequest: function(
-                        request
-                    ) {
+                    createRequest: async function(request) {
                         try {
-                            $.ajax({
-                                url: `${ROOT_URL}/api/payment?keyword=${keyword}&msisdn=${msisdn}`,
-                                type: 'GET',
-                                contentType: 'application/json',
-                                success: function(data) {
-                                    $(this).text('Play Now');
-                                    console.log(data);
-                                    if (data && data.paymentID != null) {
-                                        paymentID = data.paymentID;
-                                        window.sessionStorage.setItem('paymentID',
-                                            paymentID);
-                                        bKash.create().onSuccess(data);
-                                    } else {
-                                        bKash.create().onError();
-                                    }
-                                },
-                                error: function() {
-                                    $('#bKash_button').html(
-                                        `<i class="fas fa-play"></i> Play Now!`);
-                                    toastr.error('Payment Api Fetching Failed');
+                            const response = await axios.get(`${ROOT_URL}/api/payment?keyword=${keyword}&msisdn=${msisdn}`, {
+                                headers: {
+                                    'Content-Type': 'application/json'
                                 }
                             });
+                            const data = response.data;
+                            console.log(data);
+
+                            if (data && data.paymentID != null) {
+                                const paymentID = data.paymentID;
+                                window.sessionStorage.setItem('paymentID', paymentID);
+                                bKash.create().onSuccess(data);
+                            } else {
+                                bKash.create().onError();
+                            }
+
                         } catch (error) {
-                            toastr.error('Payment Api Fetching Failed');
+                            $('#bKash_button').html(`<i class="fas fa-play"></i> Play Now!`);
+                            console.error('ERROR 1', error);
                         }
                     },
                     executeRequestOnAuthorization: function() {
                         const paymentID = window.sessionStorage.getItem('paymentID');
-                        const url =
-                            `${ROOT_URL}/payment/execute/${msisdn}/${paymentID}`;
+                        const url = `${ROOT_URL}/payment/execute/${msisdn}/${paymentID}`;
+
                         setTimeout(() => {
                             window.location.href = url;
                         }, 1000);
                     },
                     onClose: function() {
                         $(".payment-alert").removeClass('hidden');
+
                         const buttonText = window.sessionStorage.getItem('button-text');
                         $("#bKash_button").text(buttonText);
                         $("#bKash_button").attr('disabled', true);
+
                         setTimeout(() => {
                             location.reload();
                         }, 5000);
                     }
                 });
+
             } catch (error) {
                 toastr.error('Payment Api Fetching Failed');
             }
