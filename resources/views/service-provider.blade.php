@@ -85,13 +85,13 @@
                                     value="{{ $serviceProvider->app_key ?? '' }}" required>
                             </div>
                             <div class="mb-3 col-md-6">
-                                <label class="form-label"><b>Type</b></label>
-                                <input type="text" name="type" class="form-control"
-                                    value="{{ $serviceProvider->type ?? '' }}" required>
+                                <label class="form-label required"><b>Mode</b></label>
+                                <input type="text" name="mode" class="form-control"
+                                    value="{{ $serviceProvider->mode ?? '' }}" required>
                             </div>
 
                             <div class="mb-3 col-12">
-                                <label class="form-label"><b>App Secret</b></label>
+                                <label class="form-label required"><b>App Secret</b></label>
                                 <input type="text" name="app_secret" class="form-control"
                                     value="{{ $serviceProvider->app_secret ?? '' }}" required>
                             </div>
@@ -144,7 +144,8 @@
                     },
                     {
                         render: function(data, type, row) {
-                            return row.type;
+                            
+                            return row.mode;
                         },
                         targets: 0,
                     },
@@ -200,7 +201,7 @@
                         $('#updateServiceProviderForm input[name="app_secret"]').val(data.app_secret);
                         $('#updateServiceProviderForm input[name="username"]').val(data.username);
                         $('#updateServiceProviderForm input[name="password"]').val(data.password);
-                        $('#updateServiceProviderForm input[name="type"]').val(data.type);
+                        $('#updateServiceProviderForm input[name="mode"]').val(data.mode);
                     });
             });
         };

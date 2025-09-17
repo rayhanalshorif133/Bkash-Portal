@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ServiceProviderController;
+use App\Http\Controllers\DemoPaymentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -38,5 +39,14 @@ Route::middleware(['auth'])
             Route::get('/provider', 'index')->name('provider');
             Route::get('/provider/{id}/fetch', 'fetch')->name('provider.fetch');
             Route::put('/provider-update/{id}', 'update')->name('provider.update');
+        });
+    });
+
+Route::middleware(['auth'])
+    ->prefix('demo-payment')
+    ->name('demo-payment.')
+    ->group(function () {
+        Route::controller(DemoPaymentController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
         });
     });

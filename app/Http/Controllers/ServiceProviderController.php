@@ -46,7 +46,7 @@ class ServiceProviderController extends Controller
             $serviceProvider->app_key   = $request->app_key;
             $serviceProvider->app_secret   = $request->app_secret;
             $serviceProvider->username   = $request->username;
-            $serviceProvider->type   = $request->type;
+            $serviceProvider->mode   = $request->mode;
             $serviceProvider->password   = $request->password;
             $serviceProvider->save();
             flash('<strong>Updated!</strong> Sandbox credentials saved successfully.');

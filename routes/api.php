@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-// https://gpglobal.b2mwap.com/api/subscription?keyword=GSD&msisdn=8801701677479&success_url=https://www.google.com/&failed_url=https://www.google.com/
 
-Route::get('/subscription', [PaymentController::class, 'subscription']);
+
+
+// https://bkash.baisbd.com/api/payment?keyword=APP-S&msisdn=10202
+
+
+Route::get('/payment', [PaymentController::class, 'payment']);

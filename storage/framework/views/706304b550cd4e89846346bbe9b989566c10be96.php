@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{{ env('APP_NAME') }} | Dashboard</title>
+    <title><?php echo e(env('APP_NAME')); ?> | Dashboard</title>
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <meta name="color-scheme" content="light dark" />
@@ -19,40 +19,40 @@
     <meta name="keywords"
         content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard, accessible admin panel, WCAG compliant" />
     <meta name="supported-color-schemes" content="light dark" />
-    <link rel="preload" href="{{ asset('/css/adminlte.css') }}" as="style" />
+    <link rel="preload" href="<?php echo e(asset('/css/adminlte.css')); ?>" as="style" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
         integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" media="print" onload="this.media='all'" />
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="{{ asset('/css/adminlte.css') }}" />
-    <link rel="stylesheet" href="{{ asset('/css/custom.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('/css/adminlte.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('/css/custom.css')); ?>" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    @yield('head')
+    <?php echo $__env->yieldContent('head'); ?>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
     <div class="app-wrapper">
-        @include('layouts._partials.navbar')
+        <?php echo $__env->make('layouts._partials.navbar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <!--end::Header-->
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
                 <a href="./index.html" class="brand-link">
-                    <img class="brand-image opacity-75 shadow" src="{{ asset('assets/images/logo.png') }}"
+                    <img class="brand-image opacity-75 shadow" src="<?php echo e(asset('assets/images/logo.png')); ?>"
                         alt="logo" width="60px">
-                    <span class="brand-text fw-light"> {{ env('APP_NAME') }}</span>
+                    <span class="brand-text fw-light"> <?php echo e(env('APP_NAME')); ?></span>
                 </a>
             </div>
-            @include('layouts._partials.sidebar')
+            <?php echo $__env->make('layouts._partials.sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         </aside>
         <main class="app-main">
-            @yield('breadcrumb')
+            <?php echo $__env->yieldContent('breadcrumb'); ?>
             <div class="app-content">
-                @yield('content')
+                <?php echo $__env->yieldContent('content'); ?>
             </div>
         </main>
         <footer class="app-footer">
@@ -77,8 +77,9 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.12.2/dist/axios.min.js"></script>
 
 
-    @stack('script')
+    <?php echo $__env->yieldPushContent('script'); ?>
 </body>
 <!--end::Body-->
 
 </html>
+<?php /**PATH D:\Rayhan\Development\Bkash-Portal\resources\views/layouts/app.blade.php ENDPATH**/ ?>
