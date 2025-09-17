@@ -68,7 +68,7 @@ class PaymentController extends Controller
         $serviceProvider = ServiceProvider::select()->where('mode', $mode)->first();
         $url = $serviceProvider->base_url . '/payment/create';
 
-        dd( $url );
+        dd($url);
 
         $request_data = array(
             'amount'                =>  '10',
@@ -117,11 +117,8 @@ class PaymentController extends Controller
 
         $invoice_no = rand(111111, 999999);
 
-        $findIsExist = PaymentCreate::select()->where('invoice_no', $invoice_no)->first();
+        // $findIsExist = PaymentCreate::select()->where('invoice_no', $invoice_no)->first();
 
-        if ($findIsExist) {
-            $this->getInvoiceNo();
-        }
         return $invoice_no;
     }
 }
