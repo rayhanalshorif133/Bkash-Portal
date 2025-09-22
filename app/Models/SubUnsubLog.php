@@ -9,7 +9,7 @@ class SubUnsubLog extends Model
 {
     use HasFactory;
 
-    protected $table = 'sub_un_sub_logs';
+    protected $table = 'sub_unsub_logs';
 
     protected $fillable = [
         'msisdn',
