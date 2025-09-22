@@ -11,14 +11,28 @@ use Carbon\Carbon;
 
 trait BkashTrait
 {
+
     public function getToken($mode)
     {
 
         $serviceProvider = ServiceProvider::select()->where('mode', $mode)->first();
-        $bkashApiBase = $serviceProvider->base_url . '/token/';
+        $bkashApiBase = $serviceProvider->base_url;
         $grantToken = GrantToken::orderBy('id', 'desc')
             ->where('mode', $mode)
             ->first();
+
+
+
+        $headers = [
+            'accept' => 'application/json',
+            'content-type' => 'application/json',
+            'username' => $serviceProvider->username,
+            'password' => $serviceProvider->password,
+        ];
+
+
+
+
 
         // IF the table is empty, create a new grant token
 
@@ -29,7 +43,9 @@ trait BkashTrait
                 'app_secret' => $serviceProvider->app_secret,
             ];
 
-            $response = $this->callBkashApi($bkashApiBase . 'grant', $serviceProvider, $payload);
+            $response = $this->callBkashApi($bkashApiBase . '/token/grant', $headers, $payload);
+
+
 
 
 
@@ -43,6 +59,7 @@ trait BkashTrait
             $grantToken->mode           = $mode;
             $grantToken->created       = Carbon::now()->format('Y-m-d H:i:s');
             $grantToken->save();
+
             return $response['id_token'];
         }
 
@@ -59,7 +76,7 @@ trait BkashTrait
             ];
 
 
-            $response = $this->callBkashApi($bkashApiBase . 'refresh', $serviceProvider, $payload);
+            $response = $this->callBkashApi($bkashApiBase . '/token/refresh', $headers, $payload);
 
 
             // Check after the refresh token is expired, if it is expired, then create a new grant token
@@ -69,7 +86,7 @@ trait BkashTrait
                     'app_secret' => $serviceProvider->app_secret,
                 ];
 
-                $response = $this->callBkashApi($bkashApiBase . 'grant', $serviceProvider, $payload);
+                $response = $this->callBkashApi($bkashApiBase . '/token/grant', $headers, $payload);
             }
 
 
@@ -90,22 +107,41 @@ trait BkashTrait
     }
 
 
-    public function callBkashApi($url, $serviceProvider, $payload)
+    public function callBkashApi($url, $headers, $payload)
     {
+
+
+
+        // $response = Http::withHeaders($headers)->post($url, $payload);
+
+
+        // if ($response->successful()) {
+        //     return $response->json();
+        // } else {
+        //     return response()->json([
+        //         'error' => $response->status(),
+        //         'message' => $response->body(),
+        //     ], $response->status());
+        // }
+
+
+        $baseUrl = "https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout";
+        $appKey = "5tunt4masn6pv2hnvte1sb5n3j";
+        $appSecret = "1vggbqd4hqk9g96o9rrrp2jftvek578v7d2bnerim12a87dbrrka";
+        $username = "sandboxTestUser";
+        $password = "hWD@8vtzw0";
+
         $response = Http::withHeaders([
             'accept' => 'application/json',
-            'username' => $serviceProvider->username,
-            'password' => $serviceProvider->password,
             'content-type' => 'application/json',
-        ])->post($url, $payload);
+            'username' => $username,
+            'password' => $password,
+        ])->post($baseUrl . '/token/grant', [
+            'app_key'    => $appKey,
+            'app_secret' => $appSecret,
+        ]);
 
-        if ($response->successful()) {
-            return $response->json();
-        } else {
-            return response()->json([
-                'error' => $response->status(),
-                'message' => $response->body(),
-            ], $response->status());
-        }
+
+        return $response->json();
     }
 }

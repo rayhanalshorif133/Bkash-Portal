@@ -22,4 +22,7 @@ use Illuminate\Support\Facades\Route;
 // https://bkash.baisbd.com/api/payment?keyword=APP-S&msisdn=10202
 
 
+
 Route::get('/payment', [PaymentController::class, 'payment']);
+Route::get('/payment-execute/{payment_id}', [PaymentController::class, 'executePayment']);
+Route::get('/payment-query/{payment_id}', [PaymentController::class, 'queryPayment']);

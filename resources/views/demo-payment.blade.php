@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('head')
-    <script src="https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js"></script>
-    {{-- <script src="https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js"></script> --}}
+    {{-- <script src="https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js"></script> --}}
+    <script src="https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js"></script>
 @endsection
 
 @section('breadcrumb')
@@ -117,7 +117,7 @@
                     },
                     executeRequestOnAuthorization: function() {
                         const paymentID = window.sessionStorage.getItem('paymentID');
-                        const url = `${ROOT_URL}/payment/execute/${msisdn}/${paymentID}`;
+                        const url = `${ROOT_URL}/api/payment-execute/${paymentID}`;
 
                         setTimeout(() => {
                             window.location.href = url;
