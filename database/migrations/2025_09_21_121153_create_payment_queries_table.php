@@ -31,19 +31,6 @@ class CreatePaymentQueriesTable extends Migration
             $table->timestamps();
         });
 
-        $paymentQuery = PaymentQuery::create([
-            'create_time' => Carbon::now(),
-            'update_time' => Carbon::now(),
-            'payment_id' => 'CH0011DUMMY12345',
-            'trx_id' => 'TRX123456789',
-            'transaction_status' => 'Completed',
-            'amount' => 50.75,
-            'merchant_invoice_number' => 'INV987654',
-            'customer_msisdn' => '01912345678',
-            'response' => '{"paymentID":"CH0011DUMMY12345","trxID":"TRX123456789"}',
-            'errorMessage' => null,
-            'errorCode' => null,
-        ]);
     }
 
     /**
