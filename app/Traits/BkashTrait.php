@@ -217,14 +217,15 @@ trait BkashTrait
 
 
                 // check payment status
-                sleep(13);
+                sleep(12);
                 $isPaymentSuccess = $this->queryPayment($payment_id);
 
                 if ($isPaymentSuccess) {
 
                     // create subscription
                     $this->subscription($payment, $paymentExecute->trxID, $service);
-                    $url = $service->redirect_url . '?status=success&msisdn=' . $payment->msisdn . '&amount=' . $payment->amount . '&trxID=' . $paymentExecute->trxID . '&invoice_no=' . $payment->merchant_invoice_number;
+                    $url = $service->redirect_url . '?status=success&msisdn=' . $payment->msisdn . '&amount=' . $payment->amount . '&paymentID=' . $paymentExecute->paymentID . '&invoice_no=' . $payment->merchant_invoice_number;
+                    
                     return redirect($url);
                 } else {
                     $url = $service->redirect_url . '?status=failed&msisdn=' . $payment->msisdn . '&amount=' . $service->amount;
@@ -235,7 +236,10 @@ trait BkashTrait
                 return redirect($url);
             }
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            return response()->json([
+                'status'  => 'error',
+                'message' => $th->getMessage()
+            ], 500);
         }
     }
 

@@ -2,3 +2,5 @@
 [18-Sep-2025 10:30:59 Asia/Dhaka] PHP Fatal error:  Trait "App\Traits\BkashTrait" not found in /home/baisbd/bkash.baisbd.com/app/Http/Controllers/Api/PaymentController.php on line 13
 [18-Sep-2025 10:33:54 Asia/Dhaka] PHP Fatal error:  Trait "App\Traits\BkashTrait" not found in /home/baisbd/bkash.baisbd.com/app/Http/Controllers/Api/PaymentController.php on line 13
 [18-Sep-2025 10:36:03 Asia/Dhaka] PHP Fatal error:  Trait "App\Traits\BkashTrait" not found in /home/baisbd/bkash.baisbd.com/app/Http/Controllers/Api/PaymentController.php on line 13
+[23-Sep-2025 11:57:55 Asia/Dhaka] PHP Fatal error:  Trait "App\Traits\BkashTrait" not found in /home/baisbd/pay.baisbd.com/app/Http/Controllers/Api/PaymentController.php on line 11
+[23-Sep-2025 11:58:12 Asia/Dhaka] PHP Fatal error:  Trait "App\Traits\BkashTrait" not found in /home/baisbd/pay.baisbd.com/app/Http/Controllers/Api/PaymentController.php on line 11
