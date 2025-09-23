@@ -31,6 +31,15 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a href="<?php echo e(route('demo-payment.index')); ?>" class="nav-link <?php echo e($currentRoute == 'demo-payment.index' ? 'active' : ''); ?>">
+                    <i class="nav-icon fa-solid fa-gears"></i>
+                    <p>
+                        Demo Payment
+                    </p>
+                </a>
+            </li>
+
         </ul>
         <!--end::Sidebar Menu-->
     </nav>

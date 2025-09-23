@@ -169,9 +169,9 @@ trait BkashTrait
     }
 
 
-    public function executePayment($paymentID)
+    public function executePayment($payment_id)
     {
-        $payment = Payment::select()->where('payment_id', $paymentID)->first();
+        $payment = Payment::select()->where('payment_id', $payment_id)->first();
 
         if (!$payment) {
             return response()->json([
@@ -190,7 +190,7 @@ trait BkashTrait
             sleep(1);
 
 
-            $payment_url = $serviceProvider->base_url . '/payment/execute/' . $paymentID;
+            $payment_url = $serviceProvider->base_url . '/payment/execute/' . $payment_id;
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Authorization' => $token,
@@ -198,48 +198,50 @@ trait BkashTrait
             ])->timeout(30)->post($payment_url);
 
             $result = $response->json();
-            $paymentExecute = new PaymentExecute();
-            $paymentExecute->paymentID = $result['paymentID'];
-            $paymentExecute->createTime = now();
-            $paymentExecute->updateTime = now();
-            $paymentExecute->trxID = $result['trxID'];
-            $paymentExecute->transactionStatus = $result['transactionStatus'];
-            $paymentExecute->amount = $result['amount'];
-            $paymentExecute->currency = $result['currency'];
-            $paymentExecute->intent = $result['intent'];
-            $paymentExecute->merchantInvoiceNumber = $result['merchantInvoiceNumber'];
-            $paymentExecute->customerMsisdn = $result['customerMsisdn'];
-            $paymentExecute->maxRefundableAmount = $result['maxRefundableAmount'];
-            $paymentExecute->save();
 
 
-            // check payment status
-            sleep(13);
-            $isPaymentSuccess = $this->queryPayment($paymentID);
+            if (isset($result['transactionStatus']) && $result['transactionStatus'] === "Completed") {
+                $paymentExecute = new PaymentExecute();
+                $paymentExecute->paymentID = $result['paymentID'];
+                $paymentExecute->createTime = now();
+                $paymentExecute->updateTime = now();
+                $paymentExecute->trxID = $result['trxID'];
+                $paymentExecute->transactionStatus = $result['transactionStatus'];
+                $paymentExecute->amount = $result['amount'];
+                $paymentExecute->currency = $result['currency'];
+                $paymentExecute->intent = $result['intent'];
+                $paymentExecute->merchantInvoiceNumber = $result['merchantInvoiceNumber'];
+                $paymentExecute->customerMsisdn = $result['customerMsisdn'];
+                $paymentExecute->maxRefundableAmount = $result['maxRefundableAmount'];
+                $paymentExecute->save();
 
-            if ($isPaymentSuccess) {
 
-                // create subscription
-                $this->subscription($payment, $paymentExecute->trxID, $service);
+                // check payment status
+                sleep(13);
+                $isPaymentSuccess = $this->queryPayment($payment_id);
 
-                return response()->json([
-                    'status'  => 'success',
-                    'message' => 'Payment completed successfully'
-                ], 200);
+                if ($isPaymentSuccess) {
+
+                    // create subscription
+                    $this->subscription($payment, $paymentExecute->trxID, $service);
+                    $url = $service->redirect_url . '?status=success&msisdn=' . $payment->msisdn . '&amount=' . $payment->amount . '&trxID=' . $paymentExecute->trxID . '&invoice_no=' . $payment->merchant_invoice_number;
+                    return redirect($url);
+                } else {
+                    $url = $service->redirect_url . '?status=failed&msisdn=' . $payment->msisdn . '&amount=' . $service->amount;
+                    return redirect($url);
+                }
             } else {
-                return response()->json([
-                    'status'  => 'error',
-                    'message' => 'Payment not completed, please try again'
-                ], 400);
+                $url = $service->redirect_url . '?status=failed&msisdn=' . $payment->msisdn . '&amount=' . $service->amount;
+                return redirect($url);
             }
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
     }
 
-    public function queryPayment($paymentID)
+    public function queryPayment($payment_id)
     {
-        $payment = Payment::select()->where('payment_id', $paymentID)->first();
+        $payment = Payment::select()->where('payment_id', $payment_id)->first();
         $service = Service::select()->where('keyword', $payment->keyword)->first();
         $serviceProvider = ServiceProvider::select()->where('mode', $service->mode)->first();
         $token = $this->getToken($service->mode);
@@ -250,7 +252,7 @@ trait BkashTrait
             sleep(1);
 
 
-            $payment_url = $serviceProvider->base_url . '/payment/query/' . $paymentID;
+            $payment_url = $serviceProvider->base_url . '/payment/query/' . $payment_id;
 
             $response = Http::withHeaders([
                 'accept' => 'application/json',
@@ -264,7 +266,7 @@ trait BkashTrait
             $pay_query = PaymentQuery::create([
                 'create_time' => now(),
                 'update_time' => now(),
-                'payment_id' => $paymentID,
+                'payment_id' => $payment_id,
                 'trx_id' => $result['trxID'] ?? null,
                 'transaction_status' => $result['transactionStatus'] ?? null,
                 'amount' => $result['amount'] ?? null,

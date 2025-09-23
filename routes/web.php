@@ -34,7 +34,14 @@ Route::middleware(['auth'])
     ->prefix('service')
     ->name('service.')
     ->group(function () {
-        Route::resource('/', ServiceController::class);
+        Route::controller(ServiceController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{id}/fetch', 'fetch')->name('fetch');
+            Route::get('/create', 'create')->name('create');
+            Route::put('/update', 'update')->name('update');
+            Route::delete('/{id}/delete', 'destroy')->name('delete');
+        });
+
         Route::controller(ServiceProviderController::class)->group(function () {
             Route::get('/provider', 'index')->name('provider');
             Route::get('/provider/{id}/fetch', 'fetch')->name('provider.fetch');

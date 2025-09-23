@@ -94,7 +94,7 @@
                     },
                     createRequest: async function(request) {
                         try {
-                            const response = await axios.get(`${ROOT_URL}/api/payment?keyword=${keyword}&msisdn=${msisdn}`, {
+                            const response = await axios.get(`${ROOT_URL}/api/payment?keyword=${keyword}&msisdn=${msisdn}&redirect_url=https://google.com/`, {
                                 headers: {
                                     'Content-Type': 'application/json'
                                 }

@@ -18,6 +18,7 @@ class PaymentController extends Controller
         try {
             $keyword = $request->keyword;
             $msisdn = $request->msisdn;
+            $redirect_url = $request->redirect_url;
 
             if (!$keyword || !$msisdn) {
                 return response()->json([
@@ -26,6 +27,9 @@ class PaymentController extends Controller
                 ], 400);
             }
             $service = Service::select()->where('keyword', $keyword)->first();
+            if($redirect_url){
+                $service->redirect_url = $redirect_url;
+            }
             $token = $this->getToken($service->mode);
             return $this->createPayment($token, $msisdn, $service);
         } catch (\Throwable $th) {
